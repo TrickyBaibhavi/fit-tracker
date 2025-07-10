@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitTracker | Nutrition</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --text: #111827;
+      --card: #ffffff;
+      --primary: #111827;
+      --accent: #3b82f6;
+      --gray: #e5e7eb;
+    }
+
+    body.dark {
+      --bg: #111827;
+      --text: #f9fafb;
+      --card: #1f2937;
+      --primary: #f9fafb;
+      --accent: #3b82f6;
+      --gray: #374151;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px;
+      background: var(--card);
+      border-bottom: 1px solid var(--gray);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-left, .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navbar-left h1 {
+      font-weight: 700;
+      margin-right: 30px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .nav-link:hover {
+      background-color: var(--gray);
+    }
+
+    .icon-btn {
+      font-size: 18px;
+      color: var(--text);
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .container {
+      padding: 40px 32px;
+    }
+
+    .section {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .section h2, .section h3 {
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      background: var(--gray);
+      height: 18px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0 20px;
+    }
+
+    .progress {
+      background: var(--accent);
+      height: 100%;
+      width: 46%;
+      color: white;
+      text-align: right;
+      padding-right: 10px;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 600;
+    }
+
+    .meal {
+      margin-bottom: 15px;
+    }
+
+    .meal h4 {
+      margin: 0 0 4px;
+    }
+
+    .meal small {
+      display: block;
+      color: gray;
+      font-size: 13px;
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .plan-card {
+      background: var(--card);
+      border: 1px solid var(--gray);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .plan-card h4 {
+      margin-bottom: 8px;
+    }
+
+    .plan-card button {
+      margin-top: 10px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border: 1px solid var(--gray);
+      border-radius: 6px;
+    }
+
+    .modal-content button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <h1>Fit<span style="color:#0f172a">Tracker</span></h1>
+      <a href="dashboard.html" class="nav-link"><i class="fas fa-heartbeat"></i> Dashboard</a>
+      <a href="workout.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Workouts</a>
+      <a href="nutrition.html" class="nav-link active"><i class="fas fa-bullseye"></i> Nutrition</a>
+      <a href="progress.html" class="nav-link"><i class="fas fa-chart-bar"></i> Progress</a>
+      <a href="profile.html" class="nav-link"><i class="fas fa-user"></i> Profile</a>
+    </div>
+    <div class="navbar-right">
+      <button class="icon-btn" onclick="toggleDarkMode()" id="darkModeBtn">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="section">
+      <h2>Nutrition</h2>
+      <p>Track your daily nutrition and discover healthy meal plans</p>
+    </div>
+
+    <div class="section">
+      <h3>Daily Calorie Tracker</h3>
+      <p><strong>920</strong> / 2000 calories consumed today</p>
+      <div class="progress-bar">
+        <div class="progress">46%</div>
+      </div>
+      <button onclick="openAddMealModal()">Add Meal</button>
+    </div>
+
+    <div class="section">
+      <h3>Today's Meals</h3>
+      <div id="mealList">
+        <div class="meal">
+          <h4>Breakfast - Oatmeal with berries</h4>
+          <small>8:00 AM | 320 cal</small>
+        </div>
+        <div class="meal">
+          <h4>Lunch - Grilled chicken salad</h4>
+          <small>12:30 PM | 450 cal</small>
+        </div>
+        <div class="meal">
+          <h4>Snack - Greek yogurt</h4>
+          <small>3:00 PM | 150 cal</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Recommended Meal Plans</h3>
+      <p>Choose a plan that fits your goals</p>
+      <div class="plans">
+        <div class="plan-card">
+          <h4>High Protein Plan</h4>
+          <p>Perfect for muscle building and recovery</p>
+          <p><strong>2200 cal/day</strong></p>
+          <button onclick="alert('High Protein Plan: Chicken breast, eggs, quinoa, nuts, whey protein.')">View Plan Details</button>
+        </div>
+        <div class="plan-card">
+          <h4>Mediterranean Diet</h4>
+          <p>Heart-healthy and balanced nutrition</p>
+          <p><strong>1800 cal/day</strong></p>
+          <button onclick="alert('Mediterranean Plan: Olive oil, fish, legumes, vegetables, fruits.')">View Plan Details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Meal Modal -->
+  <div class="modal" id="mealModal">
+    <div class="modal-content">
+      <h3>Add Meal</h3>
+      <input type="text" id="mealName" placeholder="Meal name" />
+      <input type="text" id="mealTime" placeholder="Time (e.g., 2:00 PM)" />
+      <input type="number" id="mealCal" placeholder="Calories" />
+      <button onclick="addMeal()">Add</button>
+    </div>
+  </div>
+
+  <script>
+    let isDark = false;
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      isDark = !isDark;
+      const icon = document.getElementById('darkModeBtn').querySelector('i');
+      icon.classList = isDark ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    function openAddMealModal() {
+      document.getElementById('mealModal').style.display = 'flex';
+    }
+
+    function addMeal() {
+      const name = document.getElementById('mealName').value;
+      const time = document.getElementById('mealTime').value;
+      const cal = document.getElementById('mealCal').value;
+      if (name && time && cal) {
+        const mealHTML = `<div class='meal'><h4>${name}</h4><small>${time} | ${cal} cal</small></div>`;
+        document.getElementById('mealList').innerHTML += mealHTML;
+        document.getElementById('mealModal').style.display = 'none';
+        document.getElementById('mealName').value = '';
+        document.getElementById('mealTime').value = '';
+        document.getElementById('mealCal').value = '';
+      }
+    }
+
+    // Close modal on outside click
+    window.onclick = function(e) {
+      const modal = document.getElementById('mealModal');
+      if (e.target == modal) modal.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

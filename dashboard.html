@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitTracker Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* DARK MODE STYLES */
+body.dark-mode {
+  background-color: #111827;
+  color: #f3f4f6;
+}
+
+body.dark-mode .navbar {
+  background-color: #1f2937;
+  border-bottom: 1px solid #374151;
+}
+
+body.dark-mode .nav-link {
+  color: #f3f4f6;
+}
+
+body.dark-mode .nav-link:hover {
+  background-color: #374151;
+}
+
+body.dark-mode .nav-link.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+body.dark-mode .card,
+body.dark-mode .chart-box,
+body.dark-mode .goals {
+  background-color: #1e293b;
+  color: #f3f4f6;
+  box-shadow: 0 4px 12px rgba(255,255,255,0.05);
+}
+
+body.dark-mode .progress-bar {
+  background-color: #374151;
+}
+
+body.dark-mode canvas {
+  background-color: transparent;
+}
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7faff;
+      margin: 0;
+      padding: 0;
+      color: #111;
+    }
+
+    /* --- NAVBAR --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-left, .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navbar-left h1 {
+      font-weight: 700;
+      margin-right: 30px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #111;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .nav-link.active {
+      background-color: #111827;
+      color: white;
+    }
+
+    .nav-link:hover {
+      background-color: #e5e7eb;
+    }
+
+    .icon-btn {
+      font-size: 18px;
+      color: #111;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    /* --- DASHBOARD CONTENT --- */
+    .container {
+      padding: 40px 80px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    h2 {
+      font-size: 32px;
+      margin-bottom: 5px;
+    }
+
+    p.subhead {
+      color: #6b7280;
+      margin-bottom: 30px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .card h4 {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .card p {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .chart-box, .goals {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    canvas {
+      margin-top: 20px;
+      max-height: 350px;
+    }
+
+    .goal {
+      margin-bottom: 20px;
+    }
+
+    .goal label {
+      display: block;
+      margin-bottom: 5px;
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      background: #e5e7eb;
+      height: 14px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .fill {
+      height: 100%;
+      text-align: right;
+      padding-right: 8px;
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .fill.blue { background: #3b82f6; width: 85%; animation: grow 1s ease forwards; }
+    .fill.orange { background: #ea580c; width: 68%; animation: grow 1s ease forwards; }
+    .fill.lightblue { background: #60a5fa; width: 92%; animation: grow 1s ease forwards; }
+
+    @keyframes grow {
+      from { width: 0; }
+      to { width: inherit; }
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .navbar {
+        padding: 16px 20px;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ NAVIGATION BAR -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <h1>Fit<span style="color:#0f172a">Tracker</span></h1>
+<a href="dashboard.html" class="nav-link active"><i class="fas fa-heartbeat"></i> Dashboard</a>
+<a href="workout.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Workouts</a>
+<a href="nutrition.html" class="nav-link"><i class="fas fa-bullseye"></i> Nutrition</a>
+<a href="progress.html" class="nav-link"><i class="fas fa-chart-bar"></i> Progress</a>
+<a href="profile.html" class="nav-link"><i class="fas fa-user"></i> Profile</a>
+
+    </div>
+    <div class="navbar-right">
+      <button class="icon-btn"><i class="fas fa-moon"></i></button>
+      <button class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </nav>
+
+  <!-- ✅ MAIN DASHBOARD -->
+  <div class="container">
+    <h1>FitTracker Dashboard</h1>
+    <p class="subhead">Welcome back! Here's your fitness overview for today.</p>
+
+    <!-- Cards -->
+    <div class="card-grid">
+      <div class="card">
+        <h4>Steps Today</h4>
+        <p>8,547</p>
+        <small>of 10,000 goal</small>
+      </div>
+      <div class="card">
+        <h4>Calories Burned</h4>
+        <p>342</p>
+        <small>of 500 goal</small>
+      </div>
+      <div class="card">
+        <h4>Workouts This Week</h4>
+        <p>4</p>
+        <small>of 5 goal</small>
+      </div>
+      <div class="card">
+        <h4>Sleep Last Night</h4>
+        <p>7.5h</p>
+        <small>of 8h goal</small>
+      </div>
+    </div>
+
+    <!-- Bar Chart + Goals -->
+    <div class="grid">
+      <div class="chart-box">
+        <h3>Weekly Activity</h3>
+        <p>Your step count and calories burned over the past 7 days</p>
+        <canvas id="weeklyBarChart"></canvas>
+      </div>
+
+      <div class="goals">
+        <h3>Today's Goals</h3>
+        <p>Track your progress towards daily targets</p>
+
+        <div class="goal">
+          <label>Steps</label>
+          <div class="progress-bar"><div class="fill blue">85%</div></div>
+        </div>
+
+        <div class="goal">
+          <label>Calories</label>
+          <div class="progress-bar"><div class="fill orange">68%</div></div>
+        </div>
+
+        <div class="goal">
+          <label>Water</label>
+          <div class="progress-bar"><div class="fill lightblue">92%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Script -->
+  <script>
+    const ctx = document.getElementById('weeklyBarChart');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Steps',
+          data: [8700, 9300, 7800, 10400, 9000, 11700, 6500],
+          backgroundColor: '#0d1224',
+          borderRadius: 6,
+          hoverBackgroundColor: '#3b82f6'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 12000,
+            ticks: { stepSize: 3000 },
+            grid: { color: '#e5e7eb' }
+          },
+          x: { grid: { display: false } }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `Steps: ${ctx.formattedValue}`
+            }
+          },
+          legend: { display: false }
+        }
+      }
+    });
+  
+  // Toggle dark mode
+  document.querySelector('.fa-moon').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+  });
+
+
+  </script>
+</body>
+</html>

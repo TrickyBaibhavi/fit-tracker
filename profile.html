@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitTracker | Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --text: #111827;
+      --card: #ffffff;
+      --primary: #111827;
+      --accent: #3b82f6;
+      --gray: #e5e7eb;
+    }
+
+    body.dark {
+      --bg: #111827;
+      --text: #f9fafb;
+      --card: #1f2937;
+      --primary: #f9fafb;
+      --accent: #3b82f6;
+      --gray: #374151;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px;
+      background: var(--card);
+      border-bottom: 1px solid var(--gray);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-left, .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navbar-left h1 {
+      font-weight: 700;
+      margin-right: 30px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .nav-link:hover {
+      background-color: var(--gray);
+    }
+
+    .icon-btn {
+      font-size: 18px;
+      color: var(--text);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .container {
+      padding: 40px 32px;
+    }
+
+    .section {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .profile-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .profile-item {
+      background: var(--gray);
+      padding: 14px;
+      border-radius: 6px;
+    }
+
+    .profile-item input {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+
+    .edit-btn, .save-btn {
+      margin-top: 16px;
+      padding: 10px 20px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .achievement {
+      background: var(--gray);
+      padding: 14px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .achievement i {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <h1>Fit<span style="color:#0f172a">Tracker</span></h1>
+      <a href="dashboard.html" class="nav-link"><i class="fas fa-heartbeat"></i> Dashboard</a>
+      <a href="workout.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Workouts</a>
+      <a href="nutrition.html" class="nav-link"><i class="fas fa-bullseye"></i> Nutrition</a>
+      <a href="progress.html" class="nav-link"><i class="fas fa-chart-bar"></i> Progress</a>
+      <a href="profile.html" class="nav-link active"><i class="fas fa-user"></i> Profile</a>
+    </div>
+    <div class="navbar-right">
+      <button class="icon-btn" onclick="toggleDarkMode()" id="darkModeBtn">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="section">
+      <h2>Profile</h2>
+      <p>Manage your personal information and view your achievements</p>
+    </div>
+
+    <div class="section">
+      <h3>Personal Information</h3>
+      <p>Update your profile details</p>
+      <div class="profile-box" id="profileBox">
+        <div class="profile-item"><strong>Full Name:</strong> <span>John Doe</span></div>
+        <div class="profile-item"><strong>Age:</strong> <span>28</span></div>
+        <div class="profile-item"><strong>Height:</strong> <span>5'10"</span></div>
+        <div class="profile-item"><strong>Weight:</strong> <span>176 lbs</span></div>
+        <div class="profile-item"><strong>Email:</strong> <span>john.doe@example.com</span></div>
+        <div class="profile-item"><strong>Fitness Goal:</strong> <span>Weight Loss</span></div>
+        <div class="profile-item"><strong>Activity Level:</strong> <span>Moderate</span></div>
+      </div>
+      <button class="edit-btn" onclick="editProfile(this)">Edit Profile</button>
+    </div>
+
+    <div class="section">
+      <h3>Achievements</h3>
+      <p>Your fitness milestones and accomplishments</p>
+      <div class="achievement"><i class="fas fa-trophy"></i> <div><strong>First Workout</strong><br>Completed your first workout session<br><small>Jan 15, 2024</small></div></div>
+      <div class="achievement"><i class="fas fa-trophy"></i> <div><strong>Week Warrior</strong><br>Worked out 5 days in a week<br><small>Jan 28, 2024</small></div></div>
+      <div class="achievement"><i class="fas fa-trophy"></i> <div><strong>Calorie Counter</strong><br>Logged meals for 7 consecutive days<br><small>Feb 5, 2024</small></div></div>
+      <div class="achievement"><i class="fas fa-trophy"></i> <div><strong>Step Master</strong><br>Reached 10,000 steps in a day<br><small>Feb 12, 2024</small></div></div>
+    </div>
+  </div>
+
+  <script>
+    let isDark = false;
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      isDark = !isDark;
+      const icon = document.getElementById('darkModeBtn').querySelector('i');
+      icon.classList = isDark ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    function editProfile(button) {
+      const profileBox = document.getElementById('profileBox');
+      const spans = profileBox.querySelectorAll('span');
+      spans.forEach(span => {
+        const input = document.createElement('input');
+        input.value = span.textContent;
+        span.parentNode.replaceChild(input, span);
+      });
+      button.textContent = 'Save Profile';
+      button.onclick = () => saveProfile(button);
+    }
+
+    function saveProfile(button) {
+      const profileBox = document.getElementById('profileBox');
+      const inputs = profileBox.querySelectorAll('input');
+      inputs.forEach(input => {
+        const span = document.createElement('span');
+        span.textContent = input.value;
+        input.parentNode.replaceChild(span, input);
+      });
+      button.textContent = 'Edit Profile';
+      button.onclick = () => editProfile(button);
+    }
+  </script>
+</body>
+</html>

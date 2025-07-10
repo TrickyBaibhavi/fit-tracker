@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitTracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="form-box" id="signUpForm">
+      <h2>FitTracker</h2>
+      <p>Create your account</p>
+      <input type="text" placeholder="Full Name" />
+      <input type="email" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <button>Sign Up</button>
+      <p>Already have an account? <a href="#" onclick="toggleForm('signIn')">Sign in</a></p>
+    </div>
+
+    <div class="form-box hidden" id="signInForm">
+      <h2>FitTracker</h2>
+      <p>Welcome back!</p>
+      <input type="email" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <button>Sign In</button>
+      <p>Need an account? <a href="#" onclick="toggleForm('signUp')">Sign up</a></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

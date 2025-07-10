@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitTracker Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Add this line inside <head> to load Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --text: #111827;
+      --card: #ffffff;
+      --primary: #111827;
+      --accent: #3b82f6;
+    }
+
+    body.dark {
+      --bg: #111827;
+      --text: #f9fafb;
+      --card: #1f2937;
+      --primary: #f9fafb;
+      --accent: #3b82f6;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+
+     /* --- NAVBAR --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-left, .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navbar-left h1 {
+      font-weight: 700;
+      margin-right: 30px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #111;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .nav-link.active {
+      background-color: #111827;
+      color: white;
+    }
+
+    .nav-link:hover {
+      background-color: #e5e7eb;
+    }
+
+    .icon-btn {
+      font-size: 18px;
+      color: #111;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .container {
+      padding: 40px 32px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+    }
+
+    .start-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: var(--card);
+      padding: 30px 40px;
+      border-radius: 12px;
+      text-align: center;
+      width: 320px;
+    }
+
+    .modal-content h4 {
+      margin-top: 0;
+    }
+
+    .timer {
+      font-size: 48px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .modal button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .pause-btn {
+      background: #4b5563;
+      color: white;
+    }
+
+    .complete-btn {
+      background: #ef4444;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+   <!-- ✅ NAVIGATION BAR -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <h1>Fit<span style="color:#0f172a">Tracker</span></h1>
+     <a href="dashboard.html" class="nav-link active"><i class="fas fa-heartbeat"></i> Dashboard</a>
+    <a href="workout.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Workouts</a>
+    <a href="nutrition.html" class="nav-link"><i class="fas fa-bullseye"></i> Nutrition</a>
+    <a href="progress.html" class="nav-link"><i class="fas fa-chart-bar"></i> Progress</a>
+    <a href="profile.html" class="nav-link"><i class="fas fa-user"></i> Profile</a>
+
+    </div>
+    <div class="navbar-right">
+<!-- Replace existing button with this -->
+<button class="icon-btn" onclick="toggleDarkMode()" id="darkModeBtn" title="Toggle Dark Mode">
+  <i class="fas fa-moon"></i>
+</button>
+<button class="icon-btn" title="Logout">
+  <i class="fas fa-sign-out-alt"></i>
+</button>
+
+  </nav>
+
+
+  <div class="container">
+    <div class="card">
+      <h3>HIIT Cardio Blast</h3>
+      <p>Burn fat and boost endurance with this intense workout.</p>
+      <button class="start-btn" onclick="startWorkout()">Start Workout</button>
+    </div>
+  </div>
+
+  <!-- Workout Modal -->
+  <div class="modal" id="workoutModal">
+    <div class="modal-content">
+      <h4>Workout In Progress</h4>
+      <div class="timer" id="timer">00:00</div>
+      <button class="pause-btn" onclick="pauseResumeTimer()">Pause</button>
+      <button class="complete-btn" onclick="completeWorkout()">Complete Workout</button>
+    </div>
+  </div>
+
+  <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+  <script>
+    let isDark = false;
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      isDark = !isDark;
+    }
+
+    const timerEl = document.getElementById('timer');
+    const modal = document.getElementById('workoutModal');
+    const beepSound = document.getElementById('beep-sound');
+
+    let seconds = 0;
+    let timerInterval;
+    let isPaused = false;
+
+    function startWorkout() {
+      modal.style.display = 'flex';
+      seconds = 0;
+      updateTimer();
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          seconds++;
+          beepSound.play();
+          updateTimer();
+        }
+      }, 1000);
+    }
+
+    function updateTimer() {
+      const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const secs = String(seconds % 60).padStart(2, '0');
+      timerEl.textContent = `${mins}:${secs}`;
+    }
+
+    function pauseResumeTimer() {
+      isPaused = !isPaused;
+      document.querySelector('.pause-btn').textContent = isPaused ? 'Resume' : 'Pause';
+    }
+
+    function completeWorkout() {
+      clearInterval(timerInterval);
+      alert('Workout complete! Duration: ' + timerEl.textContent);
+      modal.style.display = 'none';
+    }
+    function toggleDarkMode() {
+  document.body.classList.toggle('dark');
+  isDark = !isDark;
+  const icon = document.getElementById('darkModeBtn').querySelector('i');
+  icon.classList = isDark ? 'fas fa-sun' : 'fas fa-moon';
+}
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitTracker | Progress</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --text: #111827;
+      --card: #ffffff;
+      --primary: #111827;
+      --accent: #3b82f6;
+      --gray: #e5e7eb;
+    }
+
+    body.dark {
+      --bg: #111827;
+      --text: #f9fafb;
+      --card: #1f2937;
+      --primary: #f9fafb;
+      --accent: #3b82f6;
+      --gray: #374151;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 60px;
+      background: var(--card);
+      border-bottom: 1px solid var(--gray);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-left, .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navbar-left h1 {
+      font-weight: 700;
+      margin-right: 30px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .nav-link:hover {
+      background-color: var(--gray);
+    }
+
+    .icon-btn {
+      font-size: 18px;
+      color: var(--text);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .container {
+      padding: 40px 32px;
+    }
+
+    .section {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+    }
+
+    .goal {
+      background: var(--gray);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .goal-bar {
+      height: 20px;
+      color: white;
+      font-size: 13px;
+      font-weight: bold;
+      text-align: right;
+      padding-right: 8px;
+      line-height: 20px;
+    }
+
+    .active { background: #3b82f6; }
+    .completed { background: #10b981; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <h1>Fit<span style="color:#0f172a">Tracker</span></h1>
+      <a href="dashboard.html" class="nav-link"><i class="fas fa-heartbeat"></i> Dashboard</a>
+      <a href="workout.html" class="nav-link"><i class="fas fa-calendar-alt"></i> Workouts</a>
+      <a href="nutrition.html" class="nav-link"><i class="fas fa-bullseye"></i> Nutrition</a>
+      <a href="progress.html" class="nav-link active"><i class="fas fa-chart-bar"></i> Progress</a>
+      <a href="profile.html" class="nav-link"><i class="fas fa-user"></i> Profile</a>
+    </div>
+    <div class="navbar-right">
+      <button class="icon-btn" onclick="toggleDarkMode()" id="darkModeBtn">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="section">
+      <h2>Progress</h2>
+      <p>Track your goals and monitor your fitness journey</p>
+    </div>
+
+    <div class="section">
+      <h3>Weight Progress</h3>
+      <canvas id="weightChart" height="200"></canvas>
+    </div>
+
+    <div class="section">
+      <h3>Goal Progress</h3>
+      <p><strong>Lose 10 lbs</strong> (Active)</p>
+      <div class="goal">
+        <div class="goal-bar active" style="width:30%">3 / 10 lbs</div>
+      </div>
+
+      <p><strong>Run 5K</strong> (Active)</p>
+      <div class="goal">
+        <div class="goal-bar active" style="width:64%">3.2 / 5 km</div>
+      </div>
+
+      <p><strong>Workout 5x/week</strong> (Completed)</p>
+      <div class="goal">
+        <div class="goal-bar completed" style="width:80%">4 / 5 days</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isDark = false;
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      isDark = !isDark;
+      const icon = document.getElementById('darkModeBtn').querySelector('i');
+      icon.classList = isDark ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    const ctx = document.getElementById('weightChart');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Week 1','Week 2','Week 3','Week 4','Week 5','Week 6'],
+        datasets: [{
+          label: 'Weight (kg)',
+          data: [180, 175, 172, 170, 168, 165],
+          backgroundColor: '#3b82f6',
+          borderRadius: 5
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: false,
+            min: 160,
+            max: 185,
+            ticks: { stepSize: 5 }
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
